@@ -42,7 +42,7 @@ public class BigTwoGame {
 		}
 
 		clients++;
-		if (clients == 2) {
+		if (clients == 1) {
 			startGame();
 		}
 	}
@@ -64,6 +64,7 @@ public class BigTwoGame {
 		started = true;
 		determineStartingPlayer(2);
 		for (int i = 0; i < 2; i++) {
+			System.out.println("Sending message to client: " + i);
 			NetworkMessage message = new NetworkMessage(NetworkMessage.STARTING);
 			message.setPlayerNumber(i);
 			message.setPlayersTurn(firstPlayer);

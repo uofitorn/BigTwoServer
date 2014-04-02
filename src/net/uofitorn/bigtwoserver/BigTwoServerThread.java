@@ -25,6 +25,7 @@ public class BigTwoServerThread extends Thread {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         ) {
+        	bigTwoGame.attachClient(socket);
             String inputLine, outputLine;
             
             while ((inputLine = in.readLine()) != null) {

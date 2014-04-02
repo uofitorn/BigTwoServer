@@ -9,7 +9,7 @@ public class BigTwoServer {
 		 
 		int portNumber = 4444;
 	    boolean listening = true;
-	    BigTwoGame bigTwoGame = new BigTwoGame(1);
+	    BigTwoGame bigTwoGame = new BigTwoGame();
 	    int client = 0;
 	         
 	    try (ServerSocket serverSocket = new ServerSocket(portNumber)) {

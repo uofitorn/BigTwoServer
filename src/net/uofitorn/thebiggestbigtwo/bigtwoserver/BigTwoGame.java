@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import net.uofitorn.thebiggestbigtwo.common.Card;
 import net.uofitorn.thebiggestbigtwo.common.Hand;
 import net.uofitorn.thebiggestbigtwo.common.NetworkMessage;
+import net.uofitorn.thebiggestbigtwo.common.Play;
 
 public class BigTwoGame {
 	
@@ -19,14 +20,14 @@ public class BigTwoGame {
 	private int currentPlayer;
 	private int ownerOfPlay;
 	private boolean started = false;
+	private Play currentPlay;
 
 	public BigTwoGame() {
 		Deck deck = new Deck();
 		for (int i = 0; i < 4; i++) {
 			hands[i] = new Hand();
 			for (int j = 0; j < 13; j++) {
-				Card c = deck.drawFromDeck();
-				hands[i].addCard(c);
+				hands[i].addCard(deck.drawFromDeck());
 			}
 		}
 	}
@@ -48,8 +49,16 @@ public class BigTwoGame {
 		}
 	}
 	
-	public void makePlay(int player, NetworkMessage message) {
-		System.out.println("Player " + player + " made a play: " + message.getMessage());
+	public void processPlay(int player, Play play) {
+		System.out.println("Player " + player + " made a play: " + play.getFriendlyName());
+		currentPlay = play;
+		for (int i = 0; i < clients; i++) {
+			if (player == i) continue;
+			System.out.println("Sending play to player: " + i);
+			NetworkMessage message = new NetworkMessage(NetworkMessage.PLAY);
+			message.setPlay(play);
+			sendMessage(clientsAttachedOutputs.get(i), message);
+		}
 	}
 	
 	private void sendMessage(ObjectOutputStream out, NetworkMessage message) {
@@ -70,16 +79,24 @@ public class BigTwoGame {
 			message.setPlayerNumber(i);
 			message.setPlayersTurn(firstPlayer);
 			sendMessage(clientsAttachedOutputs.get(i), message);
+			
+			message = new NetworkMessage(NetworkMessage.HAND);
+			message.setHand(hands[i]);
+			sendMessage(clientsAttachedOutputs.get(i), message);
 		}
 	}
 	
 	private void determineStartingPlayer(int players) {
 		Card player1 = hands[0].getLowest();
 		Card player2 = hands[1].getLowest();
-		if (player1.compareTo(player2) == -1) {
+		System.out.println("Player 1: " + player1.toString());
+		System.out.println("Player 2: " + player2.toString());
+		if (player1.compareTo(player2) == 1) {
 			firstPlayer = 1;
 			currentPlayer = 1;
+			System.out.println("Setting to player 1");
 		} else {
+			System.out.println("Setting to player 0");
 			firstPlayer = 0;
 			currentPlayer = 0;
 		}

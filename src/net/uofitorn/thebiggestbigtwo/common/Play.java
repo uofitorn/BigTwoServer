@@ -8,10 +8,10 @@ public class Play implements Serializable {
 	
 	private static final String TAG = "Play";
 	
-	public enum TypesOfPlays {INVALID, SINGLE, PAIR, TRIPLE, STRAIGHT, FLUSH, FULL_HOUSE, 
+	public enum TypesOfPlays {INVALID, PASS, SINGLE, PAIR, TRIPLE, STRAIGHT, FLUSH, FULL_HOUSE, 
 								QUAD, STRAIGHT_FLUSH};	
 								
-	public String friendlyNames[] = {"Invalid Play", "Single Card", "Pair", "Three of a Kind",
+	public String friendlyNames[] = {"Invalid Play", "PASS", "Single Card", "Pair", "Three of a Kind",
 				"Straight", "Flush", "Full House", "Four of a Kind", "Straight Flush"};
 		
 	private Card highestCard;
@@ -27,18 +27,25 @@ public class Play implements Serializable {
 		return friendlyNames[typeOfPlay.ordinal()];
 	}
 	
+	public Card getCard(int i) {
+		return cards.get(i);
+	}
+	
 	public int compareTo(Play play) {
 		//if play > this.play return -1
+		if (this.getCardsInPlay() != play.getCardsInPlay()) {
+			return -1;
+		}
 		if(this.typeOfPlay == play.getTypeOfPlay()) {
 			if (this.highestCard.getOrdinalNumber() < play.getHighestCard().getOrdinalNumber()) {
-				return -1;
-			} else {
 				return 1;
+			} else {
+				return -1;
 			}
 		} else if (this.typeOfPlay.ordinal() < play.getTypeOfPlay().ordinal()) {
-			return -1;
-		} else {
 			return 1;
+		} else {
+			return -1;
 		}
 	}
 	
@@ -136,6 +143,11 @@ public class Play implements Serializable {
 	// private helper function to set the type of play
 	// and the high rank and suit of the play.
 	private void setTypeAndHighest() {
+		if (cards == null) {
+			typeOfPlay = TypesOfPlays.PASS;
+			highestCard = null;
+			return;
+		}
 		Collections.sort(cards);
 		if (cards.size() == 1) {
 			typeOfPlay = TypesOfPlays.SINGLE;

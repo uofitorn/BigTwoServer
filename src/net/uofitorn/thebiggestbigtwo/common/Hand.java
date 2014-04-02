@@ -20,8 +20,17 @@ public class Hand implements Serializable {
 			return cards.get(index);
 		}
 		
-		public void removeCard(int index) {
-			cards.set(index, null);
+		public void removeCard(int i) {
+			cards.set(i, null);
+		}
+		
+		public void removeCard(Card card) {
+			for (int i = 0; i < cards.size(); i++) {
+				Card tmp = cards.get(i);
+				if (tmp != null && tmp.getRank() == card.getRank() && tmp.getSuit() == card.getSuit()) {
+					cards.set(i,  null);
+				}
+			}
 		}
 		
 		public void addCard(Card card) {

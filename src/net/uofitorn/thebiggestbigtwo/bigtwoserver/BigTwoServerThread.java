@@ -30,7 +30,10 @@ public class BigTwoServerThread extends Thread {
             NetworkMessage message;
             
             while ((message = (NetworkMessage) in.readObject()) != null) {
-                //bigTwoGame.makePlay(client, message);
+                switch (message.getMessage()) {
+                	case NetworkMessage.PLAY:
+                		bigTwoGame.processPlay(client, message.getPlay());		
+                }
             }
             socket.close();
         } catch (IOException | ClassNotFoundException e) {

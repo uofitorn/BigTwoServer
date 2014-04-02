@@ -1,4 +1,0 @@
-BigTwoServer
-============
-
-BigTwo Server

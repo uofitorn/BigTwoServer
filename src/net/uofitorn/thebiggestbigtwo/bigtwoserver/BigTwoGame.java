@@ -40,9 +40,10 @@ public class BigTwoGame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		
 		clients++;
-		if (clients == 1) {
+		System.out.println("Client connected. Client: " + clients);
+		if (clients == 2) {
 			startGame();
 		}
 	}

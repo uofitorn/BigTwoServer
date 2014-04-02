@@ -1,7 +1,7 @@
 package net.uofitorn.bigtwoserver;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -26,16 +26,16 @@ public class BigTwoGame {
 		clientsAttached.add(socket);
 	}
 	
-	public void makePlay(int player, String play) {
-		System.out.println("Player " + player + " made a play: " + play);
-		broadcastMessage(play);
+	public void makePlay(int player, NetworkMessage message) {
+		System.out.println("Player " + player + " made a play: " + message.getMessage());
+		broadcastMessage(message);
 	}
 	
-	private void broadcastMessage(String message) {
+	private void broadcastMessage(NetworkMessage message) {
 		for (Socket s : clientsAttached) {
 			try {
-				PrintWriter out = new PrintWriter(s.getOutputStream(), true);
-				out.println(message);
+				ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+				out.writeObject(message);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

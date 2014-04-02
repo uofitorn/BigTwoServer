@@ -1,9 +1,7 @@
 package net.uofitorn.bigtwoserver;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 
 public class BigTwoServerThread extends Thread {
@@ -22,17 +20,20 @@ public class BigTwoServerThread extends Thread {
 	public void run() {
 		 
         try (
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            //PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            //BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        	ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+
         ) {
         	bigTwoGame.attachClient(socket);
             String inputLine, outputLine;
+            NetworkMessage message;
             
-            while ((inputLine = in.readLine()) != null) {
-                bigTwoGame.makePlay(client, inputLine);
+            while ((message = (NetworkMessage) in.readObject()) != null) {
+                bigTwoGame.makePlay(client, message);
             }
             socket.close();
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

@@ -1,6 +1,8 @@
 package net.uofitorn.bigtwoserver;
 
-public class NetworkMessage {
+import java.io.Serializable;
+
+public class NetworkMessage implements Serializable {
 	private static final String TAG = "NetworkMessage";
 	
 	String message;
